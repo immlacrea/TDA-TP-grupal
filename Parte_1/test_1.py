@@ -47,3 +47,33 @@ class TESTEjercicio1(unittest.TestCase):
         coins = extract_coins_data_from_file(data)
         winner = play_the_game(coins)
         self.assertEqual(winner, winner_sophia)
+        
+    def test_15mil_elements(self):
+        data = "15000.txt"
+        coins = extract_coins_data_from_file(data)
+        winner = play_the_game(coins)
+        self.assertEqual(winner, winner_sophia)
+    
+    def test_16mil_elements(self):
+        data = "16000.txt"
+        coins = extract_coins_data_from_file(data)
+        winner = play_the_game(coins)
+        self.assertEqual(winner, winner_sophia)
+        
+    def test_17mil_elements(self):
+        data = "17000.txt"
+        coins = extract_coins_data_from_file(data)
+        winner = play_the_game(coins)
+        self.assertEqual(winner, winner_sophia)
+    
+    def test_18mil_elements(self):
+        data = "18000.txt"
+        coins = extract_coins_data_from_file(data)
+        winner = play_the_game(coins)
+        self.assertEqual(winner, winner_sophia)
+    
+    def test_19mil_elements(self):
+        data = "19000.txt"
+        coins = extract_coins_data_from_file(data)
+        winner = play_the_game(coins)
+        self.assertEqual(winner, winner_sophia)
