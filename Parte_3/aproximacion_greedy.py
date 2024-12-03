@@ -1,9 +1,64 @@
+import sys
+
 VALID = 0
 NOT_VALID = 1
 SHIP = 2
 
 COLUMN = 1
 ROW = 0
+
+#Funcion que resuelve aproximadamente el problema del juego de la batalla naval solitaria
+#Pre: obtiene por parametro el nombre del archivo con las monedas
+#Post: devuelve el tablero con la solucion aproximada, 
+#       la cantidad de demandas no cumplidas en las filas y en las columnas
+def main():
+    check_argument_count()
+    file = take_filename_argument()
+
+    row_demands, column_demands, ships = extract_game_data_from_file(file)
+
+    table, row_unfulfilled_demands, column_unfulfilled_demands = aprox_sea_battle(row_demands, column_demands, ships)
+    return table, row_unfulfilled_demands, column_unfulfilled_demands
+
+
+def check_argument_count():
+    if (len(sys.argv) !=2):
+        print("Falta el nombre de archivo con los datos")
+        sys.exit(1)
+
+def take_filename_argument():
+    return sys.argv[1]
+
+def extract_game_data_from_file(file):
+    row_demands = [] 
+    column_demands = []
+    ships = []
+    try:
+        with open(file, 'r') as data_file:
+            next(data_file)
+            next(data_file)
+            while True:
+                line = data_file.readline().strip()
+                if not line:
+                    break
+                row_demands.append(int(line))
+
+            while True:
+                line = data_file.readline().strip()
+                if not line:
+                    break
+                column_demands.append(int(line))
+
+            while True:
+                line = data_file.readline().strip()
+                if not line:
+                    break
+                ships.append(int(line))
+        return row_demands, column_demands, ships
+    except FileNotFoundError:
+        print(f"Error: El archivo '{file}' no existe.")
+        sys.exit(1)
+
 
 def aprox_sea_battle(row_demand, column_demand, ships):
     table = create_table(row_demand, column_demand)
@@ -127,4 +182,4 @@ def deny_demand(row_demands, column_demands, index, is_column):
         row_demands[index] = 0
     
 
-aprox_sea_battle()
+main()
