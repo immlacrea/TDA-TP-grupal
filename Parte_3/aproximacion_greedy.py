@@ -1,5 +1,5 @@
+#Aproximacion Greddy de John Jellicoe 
 import sys
-
 VALID = 0
 NOT_VALID = 1
 SHIP = 2
@@ -18,6 +18,17 @@ def main():
     row_demands, column_demands, ships = extract_game_data_from_file(file)
 
     table, row_unfulfilled_demands, column_unfulfilled_demands = aprox_sea_battle(row_demands, column_demands, ships)
+    print("\nLeyenda del tablero:")
+    print("0: Casilla valida")
+    print("1: Casilla invalida")
+    print("2: Barco")
+
+    print("Solucion greedy del tablero:")  
+    for row in table:
+        print(row)
+    print("Restricciones que no se pudieron cubir por fila",row_unfulfilled_demands )
+    print("Restricciones que no se pudieron cubir por columna",column_unfulfilled_demands)
+
     return table, row_unfulfilled_demands, column_unfulfilled_demands
 
 
@@ -180,6 +191,6 @@ def deny_demand(row_demands, column_demands, index, is_column):
         column_demands[index] = 0
     else:
         row_demands[index] = 0
-    
 
-main()
+if __name__ == "__main__":
+    main()
