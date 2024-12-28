@@ -1,5 +1,5 @@
 import sys
-
+import time
 
 #Funcion que obtiene las monedas que deben seleccionar los jugadores Sophia y Mateo
 #Pre: obtiene por parametro el nombre del archivo con las monedas
@@ -12,10 +12,23 @@ def main():
     file = take_filename_argument()
 
     coins = extract_coins_data_from_file(file)
+    print(coins)
 
-    optimal_info = optimal_strategy(coins)
-    sophia_choices, mateo_choices = reconstruction(coins, optimal_info)
-    return sophia_choices, mateo_choices, sum(sophia_choices), sum(mateo_choices)
+
+    start_time = time.time()
+    n = len(coins)
+    sophia_score= optimal_strategy(coins)
+    sophia_choices, mateo_choices = reconstruction(coins, sophia_score)
+    end_time = time.time()
+    total_sum = sum(coins)
+    execution_time = end_time - start_time
+    print(f"Coins: {coins}")
+    print("Sophia choices",sophia_choices)
+    print("Mateo choices",mateo_choices)
+    print(f"Sophia's maximum score: {sophia_score[0][n-1]}")
+    print(f"Mateo's score: {total_sum - sophia_score[0][n-1]}")
+    print(f"Sophia {'wins' if sophia_score[0][n-1] > total_sum - sophia_score[0][n-1] else 'loses'}")
+    print(f"Execution time: {execution_time:.6f} seconds\n")
 
 
 def check_argument_count():
@@ -113,4 +126,5 @@ def util_sophia_measure(coins):
     sophia_choices, mateo_choices = reconstruction(coins, optimal_info)
     return
 
-main()
+if __name__ == "__main__":
+    main()
