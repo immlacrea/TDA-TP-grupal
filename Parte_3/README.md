@@ -10,7 +10,7 @@ El archivo debe respetar el formato de la catedra
 
 ## Como generar un set de datos aleatorios y calcular cota
 
-Para ejecutar el algoritmo greedy para varios set de datos aleatorios y calcular una cota de optimalidad
+Para generar varios set de datos aleatorios, aplicar el algoritmo greedy de aproximacion a cada set de datos y calcular una cota de optimalidad
 
 ```bash
 python3 generar_set.py
