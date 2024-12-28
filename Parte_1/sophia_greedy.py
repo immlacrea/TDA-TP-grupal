@@ -4,6 +4,9 @@ from collections import deque
 player_1 = "Sophia"
 player_2 = "Mateo"
 
+PRIMERA = "Primera"
+ULTIMA = "Última"
+
 #Funcion que obtiene las monedas que deben seleccionar los jugadores Sophia y Mateo
 #Pre: obtiene por parametro el nombre del archivo con las monedas
 #Post: devuelve las monedas que deben seleccionar Sophia y Mateo, cada uno en una lista diferente,
@@ -17,10 +20,9 @@ def main():
 
     sophia_coins, mateo_coins = greedy_strategy(coins)
     
-    print("Valor total de las monedas elegidas por Sophia: ", sum(sophia_coins))
-    print("Valor total de las monedas elegidas por Mateo: ", sum(mateo_coins))
+    show_result(sophia_coins, mateo_coins)
     
-    return sophia_coins, mateo_coins, sum(sophia_coins), sum(mateo_coins)
+    return 0
 
 
 def check_argument_count():
@@ -61,16 +63,25 @@ def greedy_strategy(coins):
 
 def sophia_play_taking_higher_coin(coins, sophia_coins):
     if coins[0]>=coins[-1]:
-        sophia_coins.append(coins.pop(0))
+        sophia_coins.append((coins.pop(0), PRIMERA))
     else:
-        sophia_coins.append(coins.pop())
+        sophia_coins.append((coins.pop(), ULTIMA))
 
 def mateo_play_taking_lowest_coin(coins, mateo_coins):
     if coins:
         if coins[0]>=coins[-1]:
-            mateo_coins.append(coins.pop())
+            mateo_coins.append((coins.pop(), ULTIMA))
         else:
-            mateo_coins.append(coins.pop(0))
+            mateo_coins.append((coins.pop(0), PRIMERA))
 
+
+def show_result(sophia_coins, mateo_coins):
+    for i in range(len(mateo_coins)):
+        print(f"{sophia_coins[i][1]} moneda para {player_1}: {sophia_coins[i][0]};", end=" ")
+        print(f"{mateo_coins[i][1]} moneda para {player_2}: {mateo_coins[i][0]};", end=" ")
+    if len(sophia_coins) > len(mateo_coins):
+        print(f"{player_1} toma la {sophia_coins[-1][1]} moneda {sophia_coins[-1][0]}", end=" ")
+    print()
+    print(f"Ganancia de Sophia: {sum(num for num, _ in sophia_coins)}")
 
 main()
