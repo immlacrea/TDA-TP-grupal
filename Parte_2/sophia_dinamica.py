@@ -1,6 +1,12 @@
 import sys
 import time
 
+SOPHIA = "Sophia"
+MATEO = "Mateo"
+
+PRIMERA = "primera"
+ULTIMA = "última"
+
 #Funcion que obtiene las monedas que deben seleccionar los jugadores Sophia y Mateo
 #Pre: obtiene por parametro el nombre del archivo con las monedas
 #Post: devuelve las monedas que deben seleccionar Sophia y Mateo, cada uno en una lista diferente,
@@ -14,21 +20,12 @@ def main():
     coins = extract_coins_data_from_file(file)
     print(coins)
 
-
-    start_time = time.time()
-    n = len(coins)
     sophia_score= optimal_strategy(coins)
     sophia_choices, mateo_choices = reconstruction(coins, sophia_score)
-    end_time = time.time()
-    total_sum = sum(coins)
-    execution_time = end_time - start_time
-    print(f"Coins: {coins}")
-    print("Sophia choices",sophia_choices)
-    print("Mateo choices",mateo_choices)
-    print(f"Sophia's maximum score: {sophia_score[0][n-1]}")
-    print(f"Mateo's score: {total_sum - sophia_score[0][n-1]}")
-    print(f"Sophia {'wins' if sophia_score[0][n-1] > total_sum - sophia_score[0][n-1] else 'loses'}")
-    print(f"Execution time: {execution_time:.6f} seconds\n")
+
+    show_result(sophia_choices, mateo_choices)
+
+    return 0
 
 
 def check_argument_count():
@@ -92,33 +89,43 @@ def reconstruction(coins, dp_sophia):
     while i <= j:
         #caso borde
         if i==j:
-            sophia_choices.append(coins[i])
+            sophia_choices.append((coins[i], PRIMERA))
             break
 
         choose_first = coins[i] + (dp_sophia[i+2][j] if i+2 <= j and coins[i+1] >= coins[j] else dp_sophia[i+1][j-1]) >= \
                        coins[j] + (dp_sophia[i][j-2] if j-2 >= i and coins[j-1] > coins[i] else dp_sophia[i+1][j-1])
 
         if choose_first:
-            sophia_choices.append(coins[i])
+            sophia_choices.append((coins[i], PRIMERA))
             if i+2 <= j and coins[i+1] >= coins[j]:
-                mateo_choices.append(coins[i+1])
+                mateo_choices.append((coins[i+1], PRIMERA))
                 i += 2 #agarra mateo salteo [i+1]
             else:
                 i += 1
-                mateo_choices.append(coins[j])
+                mateo_choices.append((coins[j], ULTIMA))
                 j -= 1 #agarra mateo salteo [j]
         else:
-            sophia_choices.append(coins[j])
+            sophia_choices.append((coins[j], ULTIMA))
             if j-2 >= i and coins[j-1] > coins[i]:
-                mateo_choices.append(coins[j-1])
+                mateo_choices.append((coins[j-1], ULTIMA))
                 j -= 2 #agarra mateo salteo [j-1]
             else:
-                mateo_choices.append(coins[i])
+                mateo_choices.append((coins[i], PRIMERA))
                 i += 1 #agarra mateo salteo [i]
                 j -= 1 
 
     return sophia_choices, mateo_choices
 
+
+def show_result(sophia_choices, mateo_choices):
+    for i in range(len(mateo_choices)):
+        print(f"{SOPHIA} agarra la {sophia_choices[i][1]} ({sophia_choices[i][0]});", end=" ")
+        print(f"{MATEO} agarra la {mateo_choices[i][1]} ({mateo_choices[i][0]});", end=" ")
+    if len(sophia_choices) > len(mateo_choices):
+        print(f"{SOPHIA} agarra la {sophia_choices[-1][1]} ({sophia_choices[-1][0]});", end=" ")
+    print()
+    print(f"Ganancia de Sophia: {sum(num for num, _ in sophia_choices)}")
+    print(f"Ganancia de Mateo: {sum(num for num, _ in mateo_choices)}")
 
 
 def util_sophia_measure(coins):
