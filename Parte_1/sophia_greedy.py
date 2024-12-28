@@ -16,6 +16,10 @@ def main():
     coins = extract_coins_data_from_file(file)
 
     sophia_coins, mateo_coins = greedy_strategy(coins)
+    
+    print("Valor total de las monedas elegidas por Sophia: ", sum(sophia_coins))
+    print("Valor total de las monedas elegidas por Mateo: ", sum(mateo_coins))
+    
     return sophia_coins, mateo_coins, sum(sophia_coins), sum(mateo_coins)
 
 
