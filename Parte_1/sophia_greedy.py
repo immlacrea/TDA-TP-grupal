@@ -37,16 +37,19 @@ def extract_coins_data_from_file(file):
     coins = []
     try:
         with open(file, 'r') as data_file:
-            next(data_file)
+            next(data_file)  # Salta la primera línea (cabecera)
             for line in data_file:
-                line = line.strip()
-                coins_data = line.split(";")
-            for coin in coins_data:
-                coins.append(int(coin))
+                line = line.strip()  # Elimina espacios en blanco y saltos de línea
+                coins_data = line.split(";")  # Divide la línea en partes
+                coins.extend(int(coin) for coin in coins_data if coin.isdigit())  # Convierte y agrega los valores
         return coins
     except FileNotFoundError:
         print(f"Error: El archivo '{file}' no existe.")
         sys.exit(1)
+    except ValueError as e:
+        print(f"Error al procesar los datos del archivo: {e}")
+        sys.exit(1)
+
 
 
 #Funcion que obtiene las monedas que debe seleccionar Sophia y mateo en orden de turno,
@@ -54,6 +57,7 @@ def extract_coins_data_from_file(file):
 #Pre: lista con las monedas del juego
 #Post: lista con las monedas de Sopia, listas con la monedas de Mateo
 def greedy_strategy(coins):
+    coins = deque(coins)
     sophia_coins = []
     mateo_coins = []
     while coins:
@@ -63,7 +67,7 @@ def greedy_strategy(coins):
 
 def sophia_play_taking_higher_coin(coins, sophia_coins):
     if coins[0]>=coins[-1]:
-        sophia_coins.append((coins.pop(0), PRIMERA))
+        sophia_coins.append((coins.popleft(), PRIMERA))
     else:
         sophia_coins.append((coins.pop(), ULTIMA))
 
@@ -72,7 +76,7 @@ def mateo_play_taking_lowest_coin(coins, mateo_coins):
         if coins[0]>=coins[-1]:
             mateo_coins.append((coins.pop(), ULTIMA))
         else:
-            mateo_coins.append((coins.pop(0), PRIMERA))
+            mateo_coins.append((coins.popleft(), PRIMERA))
 
 
 def show_result(sophia_coins, mateo_coins):
@@ -84,4 +88,5 @@ def show_result(sophia_coins, mateo_coins):
     print()
     print(f"Ganancia de Sophia: {sum(num for num, _ in sophia_coins)}")
 
-main()
+if __name__ == "__main__":
+    main()
